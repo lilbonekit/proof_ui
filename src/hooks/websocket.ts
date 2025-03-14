@@ -1,17 +1,19 @@
 import { useState, useRef, useEffect } from 'react'
 
 // Enum for message types
-enum WebSocketMessageType {
+export enum WebSocketMessageType {
 	SET_ADDRESS = 'SET_ADDRESS',
 	SET_SESSION_ID = 'SET_SESSION_ID',
 	USER_MESSAGE = 'USER_MESSAGE',
 	PROOF_SAVED = 'PROOF_SAVED',
+	PROOF_GENERATING = 'PROOF_GENERATING',
+	PROOF_ERROR = 'PROOF_ERROR',
 	DEFAULT = 'DEFAULT',
 }
 
-function useWebSocket(address: string) {
+function useWebSocket(address?: `0x${string}`) {
 	const [sessionId, setSessionId] = useState('')
-	const [message, setMessage] = useState<string>('')
+	const [status, setStatus] = useState<WebSocketMessageType | null>(null)
 	const socketRef = useRef<WebSocket | null>(null)
 
 	useEffect(() => {
@@ -38,14 +40,18 @@ function useWebSocket(address: string) {
 						const sessionId = parsedMessage.sessionId
 						setSessionId(sessionId)
 						console.log('Session ID (EVM Address) set to:', sessionId)
-						setMessage(event.data)
+						setStatus(parsedMessage.type)
 						break
 					}
 					case WebSocketMessageType.PROOF_SAVED:
-						setMessage(event.data)
+					case WebSocketMessageType.PROOF_GENERATING:
+					case WebSocketMessageType.PROOF_ERROR: {
+						console.log(parsedMessage)
+						setStatus(parsedMessage.type)
 						break
+					}
+
 					default:
-						setMessage('Received unknown message type.')
 						console.log('Unknown message type:', parsedMessage.type)
 						break
 				}
@@ -78,7 +84,7 @@ function useWebSocket(address: string) {
 		}
 	}
 
-	return { sessionId, message, sendMessage }
+	return { sessionId, status, sendMessage }
 }
 
 export default useWebSocket

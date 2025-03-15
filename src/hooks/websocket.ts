@@ -6,6 +6,7 @@ export enum WebSocketMessageType {
 	SET_SESSION_ID = 'SET_SESSION_ID',
 	USER_MESSAGE = 'USER_MESSAGE',
 	PROOF_SAVED = 'PROOF_SAVED',
+	PROOF_SAVING = 'PROOF_SAVING',
 	PROOF_GENERATING = 'PROOF_GENERATING',
 	PROOF_ERROR = 'PROOF_ERROR',
 	DEFAULT = 'DEFAULT',
@@ -43,8 +44,9 @@ function useWebSocket(address?: `0x${string}`) {
 						setStatus(parsedMessage.type)
 						break
 					}
-					case WebSocketMessageType.PROOF_SAVED:
+					case WebSocketMessageType.PROOF_SAVING:
 					case WebSocketMessageType.PROOF_GENERATING:
+					case WebSocketMessageType.PROOF_SAVED:
 					case WebSocketMessageType.PROOF_ERROR: {
 						console.log(parsedMessage)
 						setStatus(parsedMessage.type)

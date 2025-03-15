@@ -27,7 +27,10 @@ export default function QrCode() {
 					</p>
 				)}
 
-				{status === WebSocketMessageType.PROOF_GENERATING && (
+				{[
+					WebSocketMessageType.PROOF_GENERATING,
+					WebSocketMessageType.PROOF_SAVING,
+				].includes(status!) && (
 					<>
 						<ProgressBar
 							color=""
@@ -35,7 +38,11 @@ export default function QrCode() {
 							mode="indeterminate"
 							className="w-3/5"
 						/>
-						<strong>Generating proof...</strong>
+						<strong>
+							{status === WebSocketMessageType.PROOF_GENERATING
+								? 'Generating proof...'
+								: 'Saving proof...'}
+						</strong>
 					</>
 				)}
 

@@ -4,12 +4,23 @@ import App from './App.tsx'
 import { injected, WagmiProvider } from 'wagmi'
 
 import { http, createConfig } from 'wagmi'
-import { base, mainnet } from 'wagmi/chains'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { walletConnect, metaMask, safe } from 'wagmi/connectors'
 
+const rarimo = defineChain({
+	id: 7368,
+	name: 'Base',
+	nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
+	rpcUrls: {
+		default: {
+			http: ['https://l2.rarimo.com'],
+		},
+	},
+	contracts: {},
+})
+
 export const config = createConfig({
-	chains: [mainnet, base],
+	chains: [rarimo],
 	connectors: [
 		injected(),
 		walletConnect({ projectId: import.meta.env.VITE_REOWN_ID }),
@@ -17,8 +28,7 @@ export const config = createConfig({
 		safe(),
 	],
 	transports: {
-		[mainnet.id]: http(),
-		[base.id]: http(),
+		[rarimo.id]: http(),
 	},
 })
 
@@ -27,6 +37,7 @@ import 'primereact/resources/themes/lara-light-indigo/theme.css' //theme
 import 'primereact/resources/primereact.min.css' //core css
 import 'primeicons/primeicons.css' //icons
 import 'primeflex/primeflex.css' // flex
+import { defineChain } from 'viem'
 
 const queryClient = new QueryClient()
 

@@ -35,7 +35,6 @@ function useWebSocket(address?: `0x${string}`) {
 				console.log('Message from server:', event.data)
 				const parsedMessage = JSON.parse(event.data)
 
-				// Handling different types of messages
 				switch (parsedMessage.type) {
 					case WebSocketMessageType.SET_SESSION_ID: {
 						const sessionId = parsedMessage.sessionId
